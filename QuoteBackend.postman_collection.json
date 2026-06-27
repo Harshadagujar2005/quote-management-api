@@ -1,0 +1,116 @@
+{
+  "info": {
+    "name": "Quote Backend API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:3000" },
+    { "key": "quote_id", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/health"
+      }
+    },
+    {
+      "name": "Get All Quotes",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/quotes?page=1&limit=10",
+          "host": ["{{base_url}}"],
+          "path": ["quotes"],
+          "query": [
+            { "key": "page", "value": "1" },
+            { "key": "limit", "value": "10" },
+            { "key": "search", "value": "", "disabled": true }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get Quote by ID",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/quotes/{{quote_id}}"
+      }
+    },
+    {
+      "name": "Create Quote",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{base_url}}/quotes",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"customer\": \"Acme Corp\",\n  \"project\": \"Office Renovation\",\n  \"estimated_value\": 150000\n}"
+        }
+      }
+    },
+    {
+      "name": "Create Quote - Missing Customer (Validation Test)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{base_url}}/quotes",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"project\": \"Office Renovation\",\n  \"estimated_value\": 150000\n}"
+        }
+      }
+    },
+    {
+      "name": "Create Quote - Negative Value (Validation Test)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{base_url}}/quotes",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"customer\": \"Test\",\n  \"project\": \"Test Project\",\n  \"estimated_value\": -500\n}"
+        }
+      }
+    },
+    {
+      "name": "Analyze Quote",
+      "request": {
+        "method": "POST",
+        "url": "{{base_url}}/quotes/{{quote_id}}/analyze"
+      }
+    },
+    {
+      "name": "Update Quote Status",
+      "request": {
+        "method": "PATCH",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{base_url}}/quotes/{{quote_id}}/status",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"In Review\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Update Status - Invalid Value (Validation Test)",
+      "request": {
+        "method": "PATCH",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{base_url}}/quotes/{{quote_id}}/status",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"Pending\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Get Non-Existent Quote (404 Test)",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/quotes/nonexistent-id-123"
+      }
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model QuoteRequest {
+  id              String          @id @default(cuid())
+  customer        String
+  project         String
+  status          String          @default("New")
+  estimated_value Float
+  created_date    DateTime        @default(now())
+  analysis        AnalysisResult?
+}
+
+model AnalysisResult {
+  id            String       @id @default(cuid())
+  quote_id      String       @unique
+  risk          String
+  confidence    Int
+  missing_items String       // stored as JSON string
+  analyzed_at   DateTime     @default(now())
+  quote         QuoteRequest @relation(fields: [quote_id], references: [id])
+}
